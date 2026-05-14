@@ -146,24 +146,8 @@ const DataEntryPanel = ({ onClose }: { onClose?: () => void }) => {
           <input
             type="text"
             defaultValue="0x..."
-            className="w-full bg-[#111115] border border-red-500 text-red-400 rounded-lg px-4 py-2.5 text-sm focus:outline-none"
+            className="w-full bg-[#111115] border border-gray-500 text-black-400 rounded-lg px-4 py-2.5 text-sm focus:outline-none"
           />
-          <p className="flex items-center gap-1 text-[10px] text-red-500 mt-2 font-medium">
-            <svg
-              className="w-3 h-3"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            Invalid checksum detected for current payload.
-          </p>
         </div>
 
         <div>
@@ -204,11 +188,19 @@ const DataEntryPanel = ({ onClose }: { onClose?: () => void }) => {
       </div>
 
       <div className="p-6 flex items-center justify-between border-t border-[#2A2B36]/50">
-        <button className="text-sm font-medium text-white hover:text-gray-300">
+        <button
+          type="button"
+          onClick={onClose}
+          className="text-sm font-medium text-white hover:text-gray-300"
+        >
           Cancel
         </button>
-        <button className="px-6 py-2.5 bg-[#635BFF] hover:bg-[#524ae6] text-white rounded-lg text-sm font-medium shadow-[0_0_15px_rgba(99,91,255,0.3)] transition-colors">
-          Proceed to Step 2
+        <button
+          type="button"
+          onClick={onClose}
+          className="px-6 py-2.5 bg-[#635BFF] hover:bg-[#524ae6] text-white rounded-lg text-sm font-medium shadow-[0_0_15px_rgba(99,91,255,0.3)] transition-colors"
+        >
+          Save
         </button>
       </div>
     </aside>

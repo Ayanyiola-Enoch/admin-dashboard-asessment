@@ -73,7 +73,7 @@ const Sidebar = ({
         <NavItem
           onClick={() => setActiveTab && setActiveTab("Users")}
           icon={<UsersIcon />}
-          label="Users"
+          label="User Management"
           active={activeTab === "Users"}
         />
         <NavItem
@@ -83,10 +83,10 @@ const Sidebar = ({
           active={activeTab === "Data Management"}
         />
         <NavItem
-          onClick={() => setActiveTab && setActiveTab("Permissions")}
+          onClick={() => setActiveTab && setActiveTab("Settings")}
           icon={<PermissionsIcon />}
-          label="Permissions"
-          active={activeTab === "Permissions"}
+          label="Settings"
+          active={activeTab === "Settings"}
         />
         <NavItem
           onClick={() => setActiveTab && setActiveTab("Issues")}
@@ -95,7 +95,7 @@ const Sidebar = ({
           active={activeTab === "Issues"}
         />
         <NavItem
-          onClick={() => setActiveTab && setActiveTab("Settings")}
+          onClick={() => setActiveTab && setActiveTab("Activity")}
           icon={<SettingsIcon />}
           label="Activity"
           active={activeTab === "Activity"}

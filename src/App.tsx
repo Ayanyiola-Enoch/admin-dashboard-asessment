@@ -6,23 +6,34 @@ import DataEntryPanel from "./components/DataEntryPanel";
 import SystemActivity from "./components/SystemActivity";
 import IssueManagement from "./components/IssueManagement";
 import Dashboard from "./components/Dashboard";
+import UserManagement from "./components/UserManagement";
+import SettingsHubCentral from "./components/SettingsHubCentral";
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [panelOpen, setPanelOpen] = useState(true);
+  const [panelOpen, setPanelOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Dashboard");
+
+  const handleSetActiveTab = (tab: string) => {
+    setActiveTab(tab);
+    setPanelOpen(false);
+  };
 
   const renderContent = () => {
     switch (activeTab) {
       case "Dashboard":
         return <Dashboard />;
+      case "Users":
+        return <UserManagement />;
       case "Settings":
+        return <SettingsHubCentral />;
+      case "Activity":
         return <SystemActivity />;
       case "Issues":
         return <IssueManagement />;
       case "Data Management":
       default:
-        return <DataManagement />;
+        return <DataManagement onNewEntry={() => setPanelOpen(true)} />;
     }
   };
 
@@ -32,7 +43,7 @@ function App() {
         isOpen={menuOpen}
         setMenuOpen={setMenuOpen}
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={handleSetActiveTab}
       />
 
       <div className="flex-1 flex flex-col min-w-0 md:relative">
@@ -41,12 +52,9 @@ function App() {
         <main className="flex-1 flex overflow-hidden relative px-6 mt-2">
           <div className="flex-1 overflow-y-auto w-full">{renderContent()}</div>
 
-          {panelOpen &&
-            activeTab !== "Settings" &&
-            activeTab !== "Issues" &&
-            activeTab !== "Dashboard" && (
-              <DataEntryPanel onClose={() => setPanelOpen(false)} />
-            )}
+          {panelOpen && activeTab === "Data Management" && (
+            <DataEntryPanel onClose={() => setPanelOpen(false)} />
+          )}
         </main>
       </div>
 
