@@ -424,25 +424,6 @@ const SystemActivity = () => {
             ))}
           </div>
         </div>
-
-        <div className="flex justify-center mt-8">
-          <button className="flex items-center gap-2 px-6 py-2.5 bg-[#2A2B36]/50 border border-[#2A2B36] text-gray-300 rounded-full text-sm hover:bg-[#2A2B36] transition-colors">
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            Load Previous Logs
-          </button>
-        </div>
       </div>
     </div>
   );

@@ -77,10 +77,10 @@ const Sidebar = ({
           active={activeTab === "Users"}
         />
         <NavItem
-          onClick={() => setActiveTab && setActiveTab("Roles")}
+          onClick={() => setActiveTab && setActiveTab("Data Management")}
           icon={<RolesIcon />}
-          label="Roles"
-          active={activeTab === "Roles"}
+          label="Data Management"
+          active={activeTab === "Data Management"}
         />
         <NavItem
           onClick={() => setActiveTab && setActiveTab("Permissions")}
@@ -97,8 +97,8 @@ const Sidebar = ({
         <NavItem
           onClick={() => setActiveTab && setActiveTab("Settings")}
           icon={<SettingsIcon />}
-          label="Settings"
-          active={activeTab === "Settings"}
+          label="Activity"
+          active={activeTab === "Activity"}
         />
       </nav>
 
@@ -153,7 +153,7 @@ const NavItem = ({
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${active ? "bg-[#252631] text-white outline outline-1 outline-[#424354]" : "text-gray-400 hover:text-white hover:bg-[#252631]/50"}`}
+      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${active ? "bg-[#252631] text-white outline outline-[#424354]" : "text-gray-400 hover:text-white hover:bg-[#252631]/50"}`}
     >
       <span className={active ? "text-white" : "text-gray-400"}>{icon}</span>
       <span className="font-medium text-sm">{label}</span>
