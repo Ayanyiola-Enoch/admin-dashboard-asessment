@@ -30,31 +30,6 @@ const initialUsers: UserRecord[] = [
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=facearea&facepad=2&w=256&h=256&q=80",
     initials: null,
   },
-  {
-    id: 2,
-    name: "Sarah Jenkins",
-    email: "s.jenkins@nexus.sys",
-    role: "SYSTEM EDITOR",
-    roleColor: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
-    status: "Active",
-    statusDot: "bg-emerald-400",
-    registration: "NOV 04, 2023",
-    avatar:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?fit=facearea&facepad=2&w=256&h=256&q=80",
-    initials: null,
-  },
-  {
-    id: 3,
-    name: "Alex Lowery",
-    email: "a.lowery@nexus.sys",
-    role: "VIEWER",
-    roleColor: "bg-gray-500/10 text-gray-400 border-gray-500/20",
-    status: "Offline",
-    statusDot: "bg-gray-500",
-    registration: "JAN 15, 2024",
-    avatar: null,
-    initials: "AL",
-  },
 ];
 
 const roleMeta: Record<UserRole, { roleColor: string }> = {
@@ -116,6 +91,12 @@ const UserManagement = () => {
   const [users, setUsers] = useState<UserRecord[]>(initialUsers);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [form, setForm] = useState(defaultForm);
+  const [editUserId, setEditUserId] = useState<number | null>(null);
+  const [actionMenu, setActionMenu] = useState<null | {
+    userId: number;
+    top: number;
+    right: number;
+  }>(null);
 
   const canSubmit =
     form.name.trim().length > 0 &&
@@ -125,21 +106,66 @@ const UserManagement = () => {
   const closeDrawer = () => {
     setDrawerOpen(false);
     setForm(defaultForm);
+    setEditUserId(null);
   };
 
-  const handleCreateUser = (e: React.FormEvent) => {
+  const openCreateDrawer = () => {
+    setActionMenu(null);
+    setEditUserId(null);
+    setForm(defaultForm);
+    setDrawerOpen(true);
+  };
+
+  const openEditDrawer = (user: UserRecord) => {
+    setActionMenu(null);
+    setEditUserId(user.id);
+    setForm({
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      status: user.status,
+      avatar: user.avatar ?? "",
+    });
+    setDrawerOpen(true);
+  };
+
+  const handleSubmitUser = (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSubmit) return;
 
-    const nextId = users.reduce((max, u) => Math.max(max, u.id), 0) + 1;
     const avatar = form.avatar.trim() ? form.avatar.trim() : null;
     const initials = avatar ? null : getInitials(form.name);
+    const trimmedName = form.name.trim();
+    const trimmedEmail = form.email.trim();
+
+    if (editUserId != null) {
+      setUsers((prev) =>
+        prev.map((u) => {
+          if (u.id !== editUserId) return u;
+          return {
+            ...u,
+            name: trimmedName,
+            email: trimmedEmail,
+            role: form.role,
+            roleColor: roleMeta[form.role].roleColor,
+            status: form.status,
+            statusDot: statusDot[form.status],
+            avatar,
+            initials,
+          };
+        }),
+      );
+      closeDrawer();
+      return;
+    }
+
+    const nextId = users.reduce((max, u) => Math.max(max, u.id), 0) + 1;
     const now = new Date();
 
     const newUser: UserRecord = {
       id: nextId,
-      name: form.name.trim(),
-      email: form.email.trim(),
+      name: trimmedName,
+      email: trimmedEmail,
       role: form.role,
       roleColor: roleMeta[form.role].roleColor,
       status: form.status,
@@ -151,6 +177,14 @@ const UserManagement = () => {
 
     setUsers((prev) => [newUser, ...prev]);
     closeDrawer();
+  };
+
+  const handleDeleteUser = (userId: number) => {
+    setUsers((prev) => prev.filter((u) => u.id !== userId));
+    setActionMenu(null);
+    if (editUserId === userId) {
+      closeDrawer();
+    }
   };
 
   return (
@@ -170,7 +204,7 @@ const UserManagement = () => {
           </div>
           <button
             type="button"
-            onClick={() => setDrawerOpen(true)}
+            onClick={openCreateDrawer}
             className="bg-[#635BFF] hover:bg-[#524ae6] text-white px-5 py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 w-full sm:w-auto sm:shrink-0 cursor-pointer"
           >
             <svg
@@ -274,12 +308,28 @@ const UserManagement = () => {
                           </div>
                         )}
                         <div>
-                          <div className="font-semibold text-sm text-gray-200">
-                            {user.name.split(" ")[0]}
-                          </div>
-                          <div className="font-semibold text-sm text-gray-400">
-                            {user.name.split(" ")[1]}
-                          </div>
+                          {(() => {
+                            const [first, ...rest] = user.name
+                              .trim()
+                              .split(/\s+/);
+                            const last = rest.join(" ");
+                            return (
+                              <>
+                                <div className="font-semibold text-sm text-gray-200">
+                                  {first}
+                                </div>
+                                {last ? (
+                                  <div className="font-semibold text-sm text-gray-400">
+                                    {last}
+                                  </div>
+                                ) : (
+                                  <div className="font-semibold text-sm text-gray-400">
+                                    &nbsp;
+                                  </div>
+                                )}
+                              </>
+                            );
+                          })()}
                         </div>
                       </div>
                       <div className="col-span-3 text-sm text-gray-500">
@@ -302,7 +352,29 @@ const UserManagement = () => {
                         {user.registration}
                       </div>
                       <div className="col-span-1 text-right">
-                        <button className="text-gray-500 hover:text-gray-300">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const rect = (
+                              e.currentTarget as HTMLButtonElement
+                            ).getBoundingClientRect();
+
+                            setActionMenu((prev) => {
+                              if (prev?.userId === user.id) return null;
+                              return {
+                                userId: user.id,
+                                top: rect.bottom + 8,
+                                right: Math.max(
+                                  12,
+                                  window.innerWidth - rect.right,
+                                ),
+                              };
+                            });
+                          }}
+                          className="text-gray-500 hover:text-gray-300 cursor-pointer"
+                          aria-label={`Actions for ${user.name}`}
+                        >
                           <svg
                             className="w-5 h-5 mx-auto"
                             fill="none"
@@ -379,16 +451,21 @@ const UserManagement = () => {
         <>
           <div
             className="fixed inset-0 bg-black/50 z-40"
-            onClick={closeDrawer}
+            onClick={() => {
+              setActionMenu(null);
+              closeDrawer();
+            }}
           />
           <aside className="fixed inset-y-0 right-0 w-full sm:w-105 bg-[#16171E] border-l border-[#2A2B36] flex flex-col z-50 shadow-2xl overflow-hidden">
             <div className="p-6 border-b border-[#2A2B36]/50 flex items-start justify-between gap-4">
               <div>
                 <h2 className="text-xl font-bold text-white mb-1">
-                  Add New User
+                  {editUserId != null ? "Edit User" : "Add New User"}
                 </h2>
                 <p className="text-xs text-gray-400">
-                  Fill in the required information to create a new user.
+                  {editUserId != null
+                    ? "Update the user details and save changes."
+                    : "Fill in the required information to create a new user."}
                 </p>
               </div>
               <button
@@ -413,7 +490,7 @@ const UserManagement = () => {
             </div>
 
             <form
-              onSubmit={handleCreateUser}
+              onSubmit={handleSubmitUser}
               className="flex-1 overflow-y-auto p-6 space-y-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none"
             >
               <div>
@@ -555,11 +632,83 @@ const UserManagement = () => {
                   disabled={!canSubmit}
                   className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-colors ${canSubmit ? "bg-[#635BFF] hover:bg-[#524ae6] text-white" : "bg-[#2A2B36] text-gray-500 cursor-not-allowed"}`}
                 >
-                  Create User
+                  {editUserId != null ? "Save Changes" : "Create User"}
                 </button>
               </div>
             </form>
           </aside>
+        </>
+      )}
+
+      {/* Actions Popover */}
+      {actionMenu && (
+        <>
+          <div
+            className="fixed inset-0 z-40"
+            onClick={() => setActionMenu(null)}
+          />
+          <div
+            className="fixed z-50 w-44 bg-[#14151C] border border-[#2A2B36] rounded-lg shadow-2xl overflow-hidden"
+            style={{ top: actionMenu.top, right: actionMenu.right }}
+            role="menu"
+          >
+            <button
+              type="button"
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-200 hover:bg-[#1C1D26] transition-colors"
+              role="menuitem"
+              onClick={() => {
+                const target = users.find((u) => u.id === actionMenu.userId);
+                if (!target) {
+                  setActionMenu(null);
+                  return;
+                }
+                openEditDrawer(target);
+              }}
+            >
+              <svg
+                className="w-4 h-4 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"
+                />
+              </svg>
+              Edit
+            </button>
+
+            <button
+              type="button"
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-300 hover:bg-[#1C1D26] transition-colors"
+              role="menuitem"
+              onClick={() => handleDeleteUser(actionMenu.userId)}
+            >
+              <svg
+                className="w-4 h-4 text-red-300"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3m-4 0h14"
+                />
+              </svg>
+              Delete
+            </button>
+          </div>
         </>
       )}
     </>
