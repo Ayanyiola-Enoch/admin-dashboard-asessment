@@ -24,28 +24,6 @@ const TopBar = ({ setMenuOpen }: { setMenuOpen?: (v: boolean) => void }) => {
             </svg>
           </button>
         )}
-
-        {/* Top Navigation Tabs */}
-        <nav className="hidden md:flex items-stretch h-full space-x-6 text-sm">
-          <a
-            href="#"
-            className="flex items-center text-gray-400 hover:text-white border-b-2 border-transparent transition-colors mt-0.5"
-          >
-            Overview
-          </a>
-          <a
-            href="#"
-            className="flex items-center text-white font-medium border-b-2 border-white mt-0.5"
-          >
-            Issues
-          </a>
-          <a
-            href="#"
-            className="flex items-center text-gray-400 hover:text-white border-b-2 border-transparent transition-colors mt-0.5"
-          >
-            System Logs
-          </a>
-        </nav>
       </div>
 
       <div className="flex items-center gap-4">
