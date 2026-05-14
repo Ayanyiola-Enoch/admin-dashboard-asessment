@@ -5,18 +5,26 @@ const Sidebar = ({
   setMenuOpen,
   activeTab,
   setActiveTab,
+  collapsed = false,
+  onToggleCollapse,
 }: {
   isOpen?: boolean;
   setMenuOpen?: (v: boolean) => void;
   activeTab?: string;
   setActiveTab?: (v: string) => void;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 }) => {
   return (
     <aside
-      className={`w-64 bg-[#14151C] border-r border-[#2A2B36] flex-col absolute inset-y-0 left-0 z-50 md:relative transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"} flex`}
+      className={`w-64 ${collapsed ? "md:w-20" : "md:w-64"} shrink-0 bg-[#14151C] border-r border-[#2A2B36] flex-col absolute inset-y-0 left-0 z-50 md:relative transform transition-[transform,width] duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"} flex`}
     >
-      <div className="h-16 flex items-center justify-between px-6 border-b border-[#2A2B36]">
-        <div className="flex items-center gap-2">
+      <div
+        className={`h-16 flex items-center justify-between border-b border-[#2A2B36] ${collapsed ? "px-4" : "px-6"}`}
+      >
+        <div
+          className={`flex items-center ${collapsed ? "justify-center" : "gap-2"} min-w-0`}
+        >
           <img src="/circle.svg" alt="Logo" className="w-8 h-8" />
           {/* <div className="w-8 h-8 bg-[#635BFF] rounded-md flex items-center justify-center">
             <svg
@@ -33,91 +41,145 @@ const Sidebar = ({
               />
             </svg>
           </div> */}
-          <span className="text-xl font-bold tracking-wide">
-            Nexus<span className="text-gray-400 font-medium">Admin</span>
-          </span>
+          {!collapsed && (
+            <span className="text-xl font-bold tracking-wide truncate">
+              Nexus<span className="text-gray-400 font-medium">Admin</span>
+            </span>
+          )}
         </div>
 
-        {setMenuOpen && (
-          <button
-            onClick={() => setMenuOpen(false)}
-            className="md:hidden text-gray-400 hover:text-white"
-          >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+        <div className="flex items-center gap-2">
+          {onToggleCollapse && (
+            <button
+              type="button"
+              onClick={onToggleCollapse}
+              className="hidden md:inline-flex text-gray-400 hover:text-white transition-colors"
+              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              title={collapsed ? "Expand" : "Collapse"}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        )}
-      </div>
-      <div className="px-6 py-2 text-[10px] text-gray-500 font-semibold tracking-wider uppercase">
-        Management Console
-      </div>
+              <svg
+                className="w-5 h-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <rect
+                  x="3"
+                  y="5"
+                  width="6"
+                  height="14"
+                  rx="1.5"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+                <rect
+                  x="11"
+                  y="5"
+                  width="10"
+                  height="14"
+                  rx="1.5"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+              </svg>
+            </button>
+          )}
 
-      <nav className="flex-1 mt-6 px-4 space-y-2">
+          {setMenuOpen && (
+            <button
+              onClick={() => setMenuOpen(false)}
+              className="md:hidden text-gray-400 hover:text-white"
+              aria-label="Close sidebar"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          )}
+        </div>
+      </div>
+      {!collapsed && (
+        <div className="px-6 py-2 text-[10px] text-gray-500 font-semibold tracking-wider uppercase">
+          Management Console
+        </div>
+      )}
+
+      <nav className={`flex-1 mt-6 space-y-2 ${collapsed ? "px-2" : "px-4"}`}>
         <NavItem
           onClick={() => setActiveTab && setActiveTab("Dashboard")}
           icon={<DashboardIcon />}
           label="Dashboard"
           active={activeTab === "Dashboard"}
+          collapsed={collapsed}
         />
         <NavItem
           onClick={() => setActiveTab && setActiveTab("Users")}
           icon={<UsersIcon />}
           label="User Management"
           active={activeTab === "Users"}
+          collapsed={collapsed}
         />
         <NavItem
           onClick={() => setActiveTab && setActiveTab("Data Management")}
           icon={<RolesIcon />}
           label="Data Management"
           active={activeTab === "Data Management"}
+          collapsed={collapsed}
         />
         <NavItem
           onClick={() => setActiveTab && setActiveTab("Settings")}
           icon={<PermissionsIcon />}
           label="Settings"
           active={activeTab === "Settings"}
+          collapsed={collapsed}
         />
         <NavItem
           onClick={() => setActiveTab && setActiveTab("Issues")}
           icon={<IssuesIcon />}
           label="Issues"
           active={activeTab === "Issues"}
+          collapsed={collapsed}
         />
         <NavItem
           onClick={() => setActiveTab && setActiveTab("Activity")}
           icon={<SettingsIcon />}
           label="Activity"
           active={activeTab === "Activity"}
+          collapsed={collapsed}
         />
       </nav>
 
       {/* Bottom User Profile Profile matching screenshot */}
       <div className="p-4 border-t border-[#2A2B36]">
-        <div className="flex items-center gap-3 bg-[#1C1D26] p-3 rounded-xl border border-[#2A2B36]">
+        <div
+          className={`bg-[#1C1D26] rounded-xl border border-[#2A2B36] ${collapsed ? "p-3 flex items-center justify-center" : "p-3 flex items-center gap-3"}`}
+        >
           <img
             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixqx=auto&format=fit&facepad=2&w=256&h=256&q=80"
             alt="Alex Rivera"
             className="w-10 h-10 rounded-full border border-gray-600 object-cover"
           />
-          <div className="flex-1 min-w-0">
-            <h4 className="text-sm font-semibold text-white truncate">
-              Alex Rivera
-            </h4>
-            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">
-              Admin
-            </p>
-          </div>
+          {!collapsed && (
+            <div className="flex-1 min-w-0">
+              <h4 className="text-sm font-semibold text-white truncate">
+                Alex Rivera
+              </h4>
+              <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">
+                Admin
+              </p>
+            </div>
+          )}
           {/* <button className="text-gray-400 hover:text-white">
             <svg
               className="w-5 h-5"
@@ -144,19 +206,22 @@ const NavItem = ({
   label,
   active = false,
   onClick,
+  collapsed = false,
 }: {
   icon: React.ReactNode;
   label: string;
   active?: boolean;
   onClick?: () => void;
+  collapsed?: boolean;
 }) => {
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${active ? "bg-[#252631] text-white outline outline-[#424354]" : "text-gray-400 hover:text-white hover:bg-[#252631]/50"}`}
+      title={collapsed ? label : undefined}
+      className={`w-full flex items-center ${collapsed ? "justify-center" : "gap-3"} px-3 py-2.5 rounded-lg transition-colors ${active ? "bg-[#252631] text-white outline outline-[#424354]" : "text-gray-400 hover:text-white hover:bg-[#252631]/50"}`}
     >
       <span className={active ? "text-white" : "text-gray-400"}>{icon}</span>
-      <span className="font-medium text-sm">{label}</span>
+      {!collapsed && <span className="font-medium text-sm">{label}</span>}
     </button>
   );
 };

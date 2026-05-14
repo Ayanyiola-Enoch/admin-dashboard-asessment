@@ -1,5 +1,3 @@
-import React from "react";
-
 const DataEntryPanel = ({ onClose }: { onClose?: () => void }) => {
   return (
     <aside className="w-full md:w-96 bg-[#16171E] border-l border-[#2A2B36] flex flex-col h-full absolute md:relative z-40 right-0 top-0 overflow-hidden shadow-2xl">

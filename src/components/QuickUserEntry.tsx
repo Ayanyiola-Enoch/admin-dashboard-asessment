@@ -1,5 +1,3 @@
-import React from "react";
-
 const QuickUserEntry = () => {
   return (
     <aside className="w-80 bg-[#16171E] border-l border-[#2A2B36] flex flex-col rounded-l-3xl my-2 mr-2 shadow-2xl overflow-hidden relative">
