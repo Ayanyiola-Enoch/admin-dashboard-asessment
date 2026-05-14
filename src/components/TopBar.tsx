@@ -3,39 +3,79 @@ import React from "react";
 const TopBar = ({ setMenuOpen }: { setMenuOpen?: (v: boolean) => void }) => {
   return (
     <header className="h-16 flex items-center justify-between px-4 md:px-8 border-b border-[#2A2B36] bg-[#111115]">
-      <div className="flex items-center flex-1 max-w-md gap-3">
+      <div className="flex items-center gap-6 flex-1 h-full">
         {setMenuOpen && (
-          <button onClick={() => setMenuOpen(true)} className="md:hidden text-gray-400 hover:text-white">
-             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+          <button
+            onClick={() => setMenuOpen(true)}
+            className="md:hidden text-gray-400 hover:text-white"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
           </button>
         )}
-        <div className="flex-1 relative hidden sm:block">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <svg
-            className="h-4 w-4 text-gray-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+
+        {/* Top Navigation Tabs */}
+        <nav className="hidden md:flex items-stretch h-full space-x-6 text-sm">
+          <a
+            href="#"
+            className="flex items-center text-gray-400 hover:text-white border-b-2 border-transparent transition-colors mt-0.5"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
-        </div>
-        <input
-          type="text"
-          placeholder="Quick search..."
-          className="block w-full pl-10 pr-3 py-2 border border-[#2A2B36] rounded-md leading-5 bg-[#14151C] text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#635BFF] focus:border-[#635BFF] sm:text-sm transition-colors"
-        />
-        </div>
+            Overview
+          </a>
+          <a
+            href="#"
+            className="flex items-center text-white font-medium border-b-2 border-white mt-0.5"
+          >
+            Issues
+          </a>
+          <a
+            href="#"
+            className="flex items-center text-gray-400 hover:text-white border-b-2 border-transparent transition-colors mt-0.5"
+          >
+            System Logs
+          </a>
+        </nav>
       </div>
 
-      <div className="flex items-center gap-4 md:gap-6">
-        <div className="hidden sm:flex items-center gap-4 text-gray-400">
-          <button className="hover:text-white transition-colors">
+      <div className="flex items-center gap-4">
+        {/* Global search */}
+        <div className="hidden sm:block relative w-64">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg
+              className="h-4 w-4 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+          <input
+            type="text"
+            placeholder="Global search..."
+            className="block w-full pl-9 pr-3 py-1.5 border border-[#2A2B36] rounded-md bg-[#111115] text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:border-gray-500 transition-colors"
+          />
+        </div>
+
+        {/* Action Icons */}
+        <div className="flex items-center gap-3 text-gray-400">
+          <button className="hover:text-white transition-colors relative">
             <svg
               className="h-5 w-5"
               fill="none"
@@ -61,23 +101,18 @@ const TopBar = ({ setMenuOpen }: { setMenuOpen?: (v: boolean) => void }) => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={1.5}
-                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
               />
             </svg>
           </button>
         </div>
 
-        <div className="flex items-center gap-3 border-l border-[#2A2B36] pl-6">
-          <div className="flex flex-col items-end">
-            <span className="text-sm font-semibold text-white">Admin User</span>
-            <span className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">
-              System Overseer
-            </span>
-          </div>
+        {/* Profile Avatar */}
+        <div className="pl-3 border-l border-[#2A2B36]">
           <img
-            className="h-9 w-9 rounded-full object-cover border border-[#2A2B36]"
+            className="h-8 w-8 rounded-full border border-gray-600 object-cover"
             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixqx=auto&format=fit&facepad=2&w=256&h=256&q=80"
-            alt="Admin User"
+            alt="Alex Rivera"
           />
         </div>
       </div>

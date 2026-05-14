@@ -1,11 +1,24 @@
 import React from "react";
 
-const Sidebar = ({ isOpen, setMenuOpen }: { isOpen?: boolean, setMenuOpen?: (v: boolean) => void }) => {
+const Sidebar = ({
+  isOpen,
+  setMenuOpen,
+  activeTab,
+  setActiveTab,
+}: {
+  isOpen?: boolean;
+  setMenuOpen?: (v: boolean) => void;
+  activeTab?: string;
+  setActiveTab?: (v: string) => void;
+}) => {
   return (
-    <aside className={`w-64 bg-[#14151C] border-r border-[#2A2B36] flex-col absolute inset-y-0 left-0 z-50 md:relative transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} flex`}>
+    <aside
+      className={`w-64 bg-[#14151C] border-r border-[#2A2B36] flex-col absolute inset-y-0 left-0 z-50 md:relative transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"} flex`}
+    >
       <div className="h-16 flex items-center justify-between px-6 border-b border-[#2A2B36]">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-[#635BFF] rounded-md flex items-center justify-center">
+          <img src="/circle.svg" alt="Logo" className="w-8 h-8" />
+          {/* <div className="w-8 h-8 bg-[#635BFF] rounded-md flex items-center justify-center">
             <svg
               className="w-5 h-5 text-white"
               fill="none"
@@ -19,15 +32,30 @@ const Sidebar = ({ isOpen, setMenuOpen }: { isOpen?: boolean, setMenuOpen?: (v: 
                 d="M13 10V3L4 14h7v7l9-11h-7z"
               />
             </svg>
-          </div>
+          </div> */}
           <span className="text-xl font-bold tracking-wide">
             Nexus<span className="text-gray-400 font-medium">Admin</span>
           </span>
         </div>
-        
+
         {setMenuOpen && (
-          <button onClick={() => setMenuOpen(false)} className="md:hidden text-gray-400 hover:text-white">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+          <button
+            onClick={() => setMenuOpen(false)}
+            className="md:hidden text-gray-400 hover:text-white"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
           </button>
         )}
       </div>
@@ -36,12 +64,77 @@ const Sidebar = ({ isOpen, setMenuOpen }: { isOpen?: boolean, setMenuOpen?: (v: 
       </div>
 
       <nav className="flex-1 mt-6 px-4 space-y-2">
-        <NavItem icon={<DashboardIcon />} label="Dashboard" />
-        <NavItem icon={<RolesIcon />} label="Data Management" active />
-        <NavItem icon={<UsersIcon />} label="Users" />
-        <NavItem icon={<PermissionsIcon />} label="Permissions" />
-        <NavItem icon={<SettingsIcon />} label="Settings" />
+        <NavItem
+          onClick={() => setActiveTab && setActiveTab("Dashboard")}
+          icon={<DashboardIcon />}
+          label="Dashboard"
+          active={activeTab === "Dashboard"}
+        />
+        <NavItem
+          onClick={() => setActiveTab && setActiveTab("Users")}
+          icon={<UsersIcon />}
+          label="Users"
+          active={activeTab === "Users"}
+        />
+        <NavItem
+          onClick={() => setActiveTab && setActiveTab("Roles")}
+          icon={<RolesIcon />}
+          label="Roles"
+          active={activeTab === "Roles"}
+        />
+        <NavItem
+          onClick={() => setActiveTab && setActiveTab("Permissions")}
+          icon={<PermissionsIcon />}
+          label="Permissions"
+          active={activeTab === "Permissions"}
+        />
+        <NavItem
+          onClick={() => setActiveTab && setActiveTab("Issues")}
+          icon={<IssuesIcon />}
+          label="Issues"
+          active={activeTab === "Issues"}
+        />
+        <NavItem
+          onClick={() => setActiveTab && setActiveTab("Settings")}
+          icon={<SettingsIcon />}
+          label="Settings"
+          active={activeTab === "Settings"}
+        />
       </nav>
+
+      {/* Bottom User Profile Profile matching screenshot */}
+      <div className="p-4 border-t border-[#2A2B36]">
+        <div className="flex items-center gap-3 bg-[#1C1D26] p-3 rounded-xl border border-[#2A2B36]">
+          <img
+            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixqx=auto&format=fit&facepad=2&w=256&h=256&q=80"
+            alt="Alex Rivera"
+            className="w-10 h-10 rounded-full border border-gray-600 object-cover"
+          />
+          <div className="flex-1 min-w-0">
+            <h4 className="text-sm font-semibold text-white truncate">
+              Alex Rivera
+            </h4>
+            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">
+              Admin
+            </p>
+          </div>
+          {/* <button className="text-gray-400 hover:text-white">
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+              />
+            </svg>
+          </button> */}
+        </div>
+      </div>
     </aside>
   );
 };
@@ -50,14 +143,17 @@ const NavItem = ({
   icon,
   label,
   active = false,
+  onClick,
 }: {
   icon: React.ReactNode;
   label: string;
   active?: boolean;
+  onClick?: () => void;
 }) => {
   return (
     <button
-      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${active ? "bg-[#252631] text-white" : "text-gray-400 hover:text-white hover:bg-[#252631]/50"}`}
+      onClick={onClick}
+      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${active ? "bg-[#252631] text-white outline outline-1 outline-[#424354]" : "text-gray-400 hover:text-white hover:bg-[#252631]/50"}`}
     >
       <span className={active ? "text-white" : "text-gray-400"}>{icon}</span>
       <span className="font-medium text-sm">{label}</span>
@@ -110,6 +206,22 @@ const RolesIcon = () => (
       strokeLinejoin="round"
       strokeWidth={1.5}
       d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+    />
+  </svg>
+);
+
+const IssuesIcon = () => (
+  <svg
+    className="w-5 h-5"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"
     />
   </svg>
 );
